@@ -6,12 +6,31 @@ on:
       - main
     paths:
       - "showcases/**"
+  workflow_call:
+    inputs:
+      environment:
+        description: "Target environment (e.g., prod, staging). Falls back to vars.ENVIRONMENT."
+        required: false
+        type: string
+      ref:
+        description: "Git ref on target repo to run the workflow from"
+        required: false
+        type: string
+        default: main
+    secrets:
+      ODS_GITHUB_APP_ID:
+        required: true
+      ODS_GITHUB_PRIVATE_KEY:
+        required: true
+      ODS_GITHUB_INSTALLATION_ID:
+        required: true
 
 jobs:
   trigger:
     runs-on: ubuntu-latest
     permissions:
       actions: write
+
     steps:
       - name: Generate token
         id: generate_token
@@ -25,8 +44,8 @@ jobs:
         run: |
           gh workflow run script-manual-trigger.yaml \
             --repo opendata-swiss/metadata.swiss \
-            --ref main \
-            -f environment=$(echo "${{ vars.ENVIRONMENT }}" | tr '[:lower:]' '[:upper:]') \
+            --ref "${{ inputs.ref || 'main' }}" \
+            -f environment=$(echo "${{ inputs.environment || vars.ENVIRONMENT }}" | tr '[:lower:]' '[:upper:]') \
             -f action=HARVEST_SHOWCASES
         env:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
