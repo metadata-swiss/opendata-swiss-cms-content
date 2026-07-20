@@ -33,7 +33,7 @@ jobs:
         id: vars
         run: |
           BRANCH_NAME="${GITHUB_HEAD_REF}"
-          BRANCH_STANDARDIZED="$(perl -MURI::Escape -e 'print uri_escape($ARGV[0])' "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9-]+/-/g; s/-+/-/g; s/^-+//; s/-+$//' | cut -c1-40)"
+          BRANCH_STANDARDIZED="$(perl -MURI::Escape -e 'print uri_escape($ARGV[0])' "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9-]+/-/g; s/-+/-/g; s/^-+//; s/-+$//' | cut -c1-40 | sed -E 's/-+$//')"
           echo "branch=${BRANCH_STANDARDIZED}" >> $GITHUB_OUTPUT
 
       - name: Start preview environment
@@ -44,7 +44,7 @@ jobs:
             -f env=${{ vars.ENVIRONMENT }} \
             -f action=UP \
             -f deployment_name="${{ steps.vars.outputs.branch }}" \
-            -f cms_ref="${{ github.sha }}"
+            -f cms_ref="${{ github.event.pull_request.head.sha }}"
         env:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
 
@@ -91,6 +91,6 @@ jobs:
             -f env=${{ vars.ENVIRONMENT }} \
             -f action=DOWN \
             -f deployment_name="${{ steps.vars.outputs.branch }}" \
-            -f cms_ref="${{ github.sha }}"
+            -f cms_ref="${{ github.event.pull_request.head.sha }}"
         env:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
