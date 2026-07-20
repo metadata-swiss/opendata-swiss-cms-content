@@ -15,11 +15,6 @@ on:
         description: "Target environment name used for domain and forwarding (falls back to vars.ENVIRONMENT)"
         required: false
         type: string
-      target_repo:
-        description: "Owner/Repo where the preview-trigger workflow lives"
-        required: false
-        type: string
-        default: opendata-swiss/metadata.swiss
     secrets:
       ODS_GITHUB_APP_ID:
         required: true
