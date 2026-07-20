@@ -51,7 +51,7 @@ jobs:
         if: github.event.action != 'closed'
         run: |
           gh workflow run preview-trigger.yaml \
-            --repo "${{ inputs.target_repo }}" \
+            --repo opendata-swiss/metadata.swiss \
             -f env=${{ inputs.environment || vars.ENVIRONMENT }} \
             -f action=UP \
             -f deployment_name="${{ steps.vars.outputs.branch }}" \
