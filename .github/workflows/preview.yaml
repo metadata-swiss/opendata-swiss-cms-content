@@ -37,6 +37,9 @@ jobs:
         with:
           app-id: ${{ secrets.ODS_GITHUB_APP_ID }}
           private-key: ${{ secrets.ODS_GITHUB_PRIVATE_KEY }}
+          owner: metadata-swiss
+          repositories: |
+            opendata-swiss
 
       - name: Configure some variables
         id: vars
@@ -50,7 +53,7 @@ jobs:
         if: github.event.action != 'closed'
         run: |
           gh workflow run preview-trigger.yaml \
-            --repo opendata-swiss/metadata.swiss \
+            --repo metadata-swiss/opendata-swiss \
             -f env=${{ inputs.environment || vars.ENVIRONMENT }} \
             -f action=UP \
             -f deployment_name="${{ steps.vars.outputs.branch }}" \
@@ -99,7 +102,7 @@ jobs:
         continue-on-error: true
         run: |
           gh workflow run preview-trigger.yaml \
-            --repo opendata-swiss/metadata.swiss \
+            --repo metadata-swiss/opendata-swiss \
             -f env=${{ inputs.environment || vars.ENVIRONMENT }} \
             -f action=DOWN \
             -f deployment_name="${{ steps.vars.outputs.branch }}" \
