@@ -29,15 +29,14 @@ jobs:
       statuses: write
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Generate token
         id: generate_token
-        uses: tibdex/github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
-          app_id: ${{ secrets.ODS_GITHUB_APP_ID }}
-          private_key: ${{ secrets.ODS_GITHUB_PRIVATE_KEY }}
-          installation_id: ${{ secrets.ODS_GITHUB_INSTALLATION_ID }}
+          app-id: ${{ secrets.ODS_GITHUB_APP_ID }}
+          private-key: ${{ secrets.ODS_GITHUB_PRIVATE_KEY }}
 
       - name: Configure some variables
         id: vars
